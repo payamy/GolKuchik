@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -22,9 +23,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
+        Debug.Log(joystick.Horizontal + "--" + joystick.Vertical);
         rigidbody2d.velocity = new Vector3(joystick.Horizontal * 500 * Time.deltaTime,
                                          joystick.Vertical * 500 * Time.deltaTime,
                                          0);
+
         if (ball)
         {
             ballRB2d.velocity = rigidbody2d.velocity;
@@ -71,6 +77,10 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.tag == "Ball")
         {
+            players = FindObjectsOfType<Player>();
+            foreach (Player p in players)
+                p.ball = null;
+
             ball = collision.collider.GetComponent<Ball>();
             collision.collider.transform.parent = transform; //temp
             Debug.Log("On your feet!");
@@ -101,4 +111,6 @@ public class Player : MonoBehaviour
 
     private float angle;
     private float oldAngle;
+
+    private Player[] players;
 }
