@@ -13,11 +13,11 @@ public class Player : NetworkBehaviour
         kickButton = FindObjectOfType<Button>();
 
         rigidbody2d = GetComponent<Rigidbody2D>();
-        //ballRB2d = FindObjectOfType<Ball>().GetComponent<Rigidbody2D>();
+        ballRB2d = FindObjectOfType<Ball>().GetComponent<Rigidbody2D>();
 
         angle = 0;
         oldAngle = 0;
-        rotateDir = 1f;
+        rotateDir = 2f;
     }
 
     // Update is called once per frame
@@ -26,9 +26,8 @@ public class Player : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        Debug.Log(joystick.Horizontal + "--" + joystick.Vertical);
-        rigidbody2d.velocity = new Vector3(joystick.Horizontal * 500 * Time.deltaTime,
-                                         joystick.Vertical * 500 * Time.deltaTime,
+        rigidbody2d.velocity = new Vector3(joystick.Horizontal * 400 * Time.deltaTime,
+                                         joystick.Vertical * 400 * Time.deltaTime,
                                          0);
 
         if (ball)
@@ -68,13 +67,14 @@ public class Player : NetworkBehaviour
         oldAngle = angle;
     }
 
-    public bool V2Equal(Vector2 a, Vector2 b)
+    private bool V2Equal(Vector2 a, Vector2 b)
     {
         return Vector2.SqrMagnitude(a - b) < 0.01;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("ATTENTION!!!");
         if (collision.collider.tag == "Ball")
         {
             players = FindObjectsOfType<Player>();
